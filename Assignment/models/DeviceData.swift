@@ -18,7 +18,7 @@ struct DeviceData: Decodable, Identifiable, Hashable, Equatable {
         hasher.combine(id)
     }
     
-    let id: String
+    let id: String // can use this in search functionality
     let name: String
     let data: ItemData?
 }

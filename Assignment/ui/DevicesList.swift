@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DevicesList: View {
-    let devices: [DeviceData]
+    @Binding var devices: [DeviceData]
     let onSelect: (DeviceData) -> Void // Callback for item selection
 
     var body: some View {

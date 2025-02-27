@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    private var viewModel = ContentViewModel()
+    @StateObject private var viewModel = ContentViewModel()
     @State private var path: [DeviceData] = [] // Navigation path
 
     var body: some View {
         NavigationStack(path: $path) {
             Group {
                 if let computers = viewModel.data, !computers.isEmpty {
-                    DevicesList(devices: computers) { selectedComputer in
+                    DevicesList(devices: $(viewModel.data!)) { selectedComputer in
                         viewModel.navigateToDetail(navigateDetail: selectedComputer)
                     }
                 } else {
@@ -25,12 +25,14 @@ struct ContentView: View {
             .onChange(of: viewModel.navigateDetail, {
                 let navigate = viewModel.navigateDetail
                 path.append(navigate!)
+                path.removeFirst()
             })
             .navigationTitle("Devices")
             .navigationDestination(for: DeviceData.self) { computer in
                 DetailView(device: computer)
             }
             .onAppear {
+                viewModel.fetchAPI()
                 let navigate = viewModel.navigateDetail
                 if (navigate != nil) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
